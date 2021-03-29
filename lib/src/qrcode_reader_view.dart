@@ -11,32 +11,32 @@ import 'package:flutter/scheduler.dart';
 /// 使用前需已经获取相关权限
 /// Relevant privileges must be obtained before use
 class QrcodeReaderView extends StatefulWidget {
-  final Widget headerWidget;
-  final Future Function(String) onScan;
+  final Widget? headerWidget;
+  final Future Function(String?) onScan;
   final double scanBoxRatio;
   final Color boxLineColor;
-  final Widget helpWidget;
+  final Widget? helpWidget;
 
-  final bool hasHintText;
+  final bool? hasHintText;
 
-  final String centeredText;
+  final String? centeredText;
 
   /// default style for the centered text is
   /// color: white
   /// fontSize: 16
-  final TextStyle centeredTextStyle;
+  final TextStyle? centeredTextStyle;
 
   /// default alignment for the centered text is
   /// TextAlign.center
-  final TextAlign centeredTextAlignment;
+  final TextAlign? centeredTextAlignment;
 
-  final bool hasLightSwitch;
+  final bool? hasLightSwitch;
 
-  final bool hasImagePicker;
+  final bool? hasImagePicker;
 
   QrcodeReaderView({
-    Key key,
-    @required this.onScan,
+    Key? key,
+    required this.onScan,
     this.headerWidget,
     this.boxLineColor = Colors.cyanAccent,
     this.helpWidget,
@@ -60,10 +60,10 @@ class QrcodeReaderView extends StatefulWidget {
 /// ```
 class QrcodeReaderViewState extends State<QrcodeReaderView>
     with TickerProviderStateMixin {
-  QrReaderViewController _controller;
-  AnimationController _animationController;
-  bool openFlashlight;
-  Timer _timer;
+  late QrReaderViewController _controller;
+  AnimationController? _animationController;
+  bool? openFlashlight;
+  Timer? _timer;
   bool hasCameraPermission = false;
   @override
   void initState() {
@@ -71,7 +71,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
     openFlashlight = false;
     _initAnimation();
 
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
+    SchedulerBinding.instance!.addPostFrameCallback((_) async {
       bool isOk = await getPermissionOfCamera();
       if (isOk) {
         setState(() {
@@ -107,7 +107,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
           });
         }
       });
-    _animationController.forward(from: 0.0);
+    _animationController!.forward(from: 0.0);
   }
 
   void _clearAnimation() {
@@ -146,7 +146,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
     _controller.stopCamera();
   }
 
-  Future<bool> setFlashlight() async {
+  Future<bool?> setFlashlight() async {
     openFlashlight = await _controller.setFlashlight();
     setState(() {});
     return openFlashlight;
@@ -183,7 +183,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
     color: Colors.white,
   );
 
-  bool hasCenteredText(String text) {
+  bool hasCenteredText(String? text) {
     return text != null && text.isNotEmpty;
   }
 
@@ -205,7 +205,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
                 print("建议高度与扫码区域高度比大于1.5");
               }
               return Stack(
-                children: <Widget>[
+                (children: <Widget?>[
                   SizedBox(
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,
@@ -264,7 +264,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
                         child: GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: setFlashlight,
-                          child: openFlashlight ? flashOpen : flashClose,
+                          child: openFlashlight! ? flashOpen : flashClose,
                         ),
                       ),
                     )
@@ -308,7 +308,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        widget.centeredText,
+                        widget.centeredText!,
                         style: widget.centeredTextStyle ??
                             TextStyle(
                               color: Colors.white,
@@ -320,7 +320,7 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
                     )
                   else
                     Container(),
-                ],
+                ]) as List<Widget>,
               );
             }),
           );
@@ -336,11 +336,11 @@ class QrcodeReaderViewState extends State<QrcodeReaderView>
 class QrScanBoxPainter extends CustomPainter {
   final double animationValue;
   final bool isForward;
-  final Color boxLineColor;
+  final Color? boxLineColor;
 
   QrScanBoxPainter(
-      {@required this.animationValue,
-      @required this.isForward,
+      {required this.animationValue,
+      required this.isForward,
       this.boxLineColor})
       : assert(animationValue != null),
         assert(isForward != null);
@@ -395,7 +395,7 @@ class QrScanBoxPainter extends CustomPainter {
     final leftPress = (size.height + lineSize) * animationValue - lineSize;
     linePaint.style = PaintingStyle.stroke;
     linePaint.shader = LinearGradient(
-      colors: [Colors.transparent, boxLineColor],
+      colors: [Colors.transparent, boxLineColor!],
       begin: isForward ? Alignment.topCenter : Alignment(0.0, 2.0),
       end: isForward ? Alignment(0.0, 0.5) : Alignment.topCenter,
     ).createShader(Rect.fromLTWH(0, leftPress, size.width, lineSize));

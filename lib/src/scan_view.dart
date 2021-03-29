@@ -5,25 +5,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:super_qr_reader/src/qrcode_reader_view.dart';
 
 class ScanView extends StatefulWidget {
-  final bool hasHintText;
+  final bool? hasHintText;
 
-  final String centeredText;
+  final String? centeredText;
 
   /// default style for the centered text is
   /// color: white
   /// fontSize: 16
-  final TextStyle centeredTextStyle;
+  final TextStyle? centeredTextStyle;
 
   /// default alignment for the centered text is
   /// TextAlign.center
-  final TextAlign centeredTextAlignment;
+  final TextAlign? centeredTextAlignment;
 
-  final bool hasLightSwitch;
+  final bool? hasLightSwitch;
 
-  final bool hasImagePicker;
+  final bool? hasImagePicker;
 
   ScanView({
-    Key key,
+    Key? key,
     this.hasHintText,
     this.centeredText,
     this.centeredTextStyle,
